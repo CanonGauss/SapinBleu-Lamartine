@@ -1,5 +1,6 @@
 # Publie la maquette sur GitHub Pages.
-# Copie etude_ombres\maquette_3d.html -> index.html (avec noindex), commit et push.
+# Copie etude_ombres\maquette_3d.html -> index.html (avec noindex) et le dossier
+# LamartineSource, puis commit et push.
 # Usage : powershell -ExecutionPolicy Bypass -File publier.ps1
 
 $ErrorActionPreference = 'Stop'
@@ -17,8 +18,13 @@ if (-not $html.Contains('name="robots"')) {
 }
 [IO.File]::WriteAllText($cible, $html, $utf8)
 
+# Synchronise le dossier des documents sources (PDF, photos)
+$docs = Join-Path $site '..\lamartine\LamartineSource'
+robocopy (Resolve-Path $docs) (Join-Path $site 'LamartineSource') /MIR /NJH /NJS /NP | Out-Null
+if ($LASTEXITCODE -ge 8) { throw "Echec de la copie de LamartineSource (robocopy $LASTEXITCODE)" }
+
 Set-Location $site
-git add index.html
+git add index.html LamartineSource
 git diff --cached --quiet
 if ($LASTEXITCODE -eq 0) { Write-Host 'Aucun changement a publier.'; exit 0 }
 git commit -m ("Mise a jour de la maquette " + (Get-Date -Format 'yyyy-MM-dd HH:mm'))
