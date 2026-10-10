@@ -22,4 +22,4 @@ git add index.html
 git diff --cached --quiet
 if ($LASTEXITCODE -eq 0) { Write-Host 'Aucun changement a publier.'; exit 0 }
 git commit -m ("Mise a jour de la maquette " + (Get-Date -Format 'yyyy-MM-dd HH:mm'))
-git push
+if (git remote) { git push } else { Write-Host 'Pas de depot distant configure : push ignore.' }
