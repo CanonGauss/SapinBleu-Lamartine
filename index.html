@@ -9,7 +9,7 @@
   #view { position: absolute; inset: 0; }
   .panel { position: absolute; top: 12px; background: rgba(255,255,255,0.95); border-radius: 12px; padding: 12px 14px;
            box-shadow: 0 2px 12px rgba(0,0,0,0.25); font-size: 13.5px; max-height: calc(100vh - 48px); overflow-y: auto; }
-  #left { left: 12px; width: 300px; }
+  #left { left: 12px; top: 62px; width: 300px; max-height: calc(100vh - 98px); }   /* sous les onglets */
   #right { right: 12px; width: 390px; }
   .panel .head { display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; user-select: none; }
   .panel .head h1 { margin: 0; }
@@ -50,6 +50,25 @@
   #needle i { position: absolute; left: -5px; top: -40px; font-style: normal; font-weight: 700; font-size: 12px; }
   #hint { position: absolute; left: 50%; transform: translateX(-50%); bottom: 12px; color: #222; font-size: 13px;
           background: rgba(255,255,255,.88); padding: 6px 12px; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.2); }
+  /* onglets : maquette 3D / note pour l'avocat */
+  #tabs { position: absolute; top: 12px; left: 12px; z-index: 20; display: flex; gap: 4px;
+          padding: 4px; background: rgba(255,255,255,0.95); border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+  #tabs button { border: none; background: transparent; font-weight: 600; font-size: 13.5px; padding: 6px 12px; }
+  #tabs button.on { background: #2f6db5; color: #fff; }
+  #note { position: absolute; inset: 0; z-index: 15; overflow-y: auto; background: #e9edf2; display: none; }
+  body.note-on #note { display: block; }
+  #note .page { max-width: 860px; margin: 64px auto 40px; padding: 28px 36px; background: #fff; border-radius: 12px;
+                box-shadow: 0 2px 12px rgba(0,0,0,0.15); font-size: 14.5px; line-height: 1.5; }
+  #note h1 { font-size: 22px; margin: 0 0 4px; }
+  #note h2 { font-size: 17px; text-transform: none; letter-spacing: 0; color: #1d3557; margin: 24px 0 8px; }
+  #note p { line-height: 1.5; margin: 8px 0; }
+  #note li { margin: 4px 0; }
+  #note table { border-collapse: collapse; width: 100%; font-size: 13.5px; margin: 8px 0; }
+  #note th, #note td { border: 1px solid #d6dbe3; padding: 5px 8px; text-align: left; vertical-align: top; }
+  #note th { background: #eef3fa; }
+  #note ul.todo { list-style: none; padding-left: 4px; }
+  #note ul.todo li::before { content: "☐ "; }
+  #note .warn { background: #fdecea; border: 1px solid #e6a19a; border-radius: 9px; padding: 8px 12px; font-size: 13.5px; }
 </style>
 </head>
 <body>
@@ -155,6 +174,103 @@
 
 <div id="compass"><div id="needle"><b></b><i>N</i></div></div>
 <div id="hint">👆 Cliquez sur une maison en couleur pour voir ce que le projet change pour elle · souris : tourner / zoomer</div>
+
+<!-- ============ ONGLETS ============ -->
+<div id="tabs">
+  <button id="tab3d" class="on">🧊 Maquette 3D</button>
+  <button id="tabNote">📄 Note pour l'avocat</button>
+</div>
+
+<!-- ============ NOTE POUR L'AVOCAT ============ -->
+<div id="note"><div class="page">
+  <h1>Note pour l'avocat — Projet Lebon-Lamartine et copropriété des Castors de Sainte Colombe</h1>
+  <p class="muted">20 octobre 2026</p>
+  <p>Le projet A26 BLM de la rue Lamartine (permis déposé le 9 mars 2026) s'élève au sud des 18 maisons de plain-pied
+    de la copropriété des Castors de Sainte Colombe. Aucune règle chiffrée du PLU ne paraît enfreinte. Les arguments
+    possibles tiennent à la fiche de lot, à la note d'ensoleillement et à l'OAP « Habitat bioclimatique ».</p>
+
+  <h2>Questions pour vous</h2>
+  <ol>
+    <li><b>Fiche de lot</b> : peut-on l'opposer au permis ? Elle exige qu'« à l'équinoxe de printemps, l'ombre portée
+      ne devra pas affecter les façades avec des ouvertures ».</li>
+    <li><b>Note d'ensoleillement</b> : elle étudie un volume de mars 2025, plus bas que celui du permis. A-t-elle pu
+      fausser l'appréciation de l'administration ?</li>
+    <li><b>OAP</b> : le passage sans gradins de maisons de plain-pied à un R+5 rend-il le projet incompatible avec
+      l'orientation 2.1.3 ?</li>
+    <li><b>Procédure</b> : délai depuis l'affichage, recours gracieux, notification sous 15 jours, intérêt à agir de
+      chaque copropriétaire.</li>
+    <li><b>Hors permis</b> : une action pour trouble anormal de voisinage est-elle envisageable après la construction ?</li>
+  </ol>
+  <p>Pièces à obtenir :</p>
+  <ul class="todo">
+    <li>Arrêté de permis et date du premier affichage sur le terrain</li>
+    <li>Dossier de permis complet, avec les plans cotés de mars et juillet 2026</li>
+    <li>Fiche de lot et acte qui la rend applicable</li>
+    <li>Relevé des fenêtres réelles des maisons les plus proches</li>
+  </ul>
+
+  <h2>Ensoleillement</h2>
+  <p>La note Trans-Faire (mars 2025) décrit « R+2 en limite nord le long du tissu pavillonnaire, R+4 + attique à
+    l'angle sud-ouest ». Elle conclut à « très peu d'incidence » à l'équinoxe. Le permis prévoit pourtant un bât. A en
+    R+5 (environ 19,8 m) sur 37 m de long, avec un dernier étage à l'aplomb du côté des voisins.</p>
+  <p>Notre étude, faite sur le projet du permis, trouve que le 20 mars l'ombre du projet atteint des façades avec
+    fenêtres de 5 maisons :</p>
+  <table>
+    <tr><th>Maison</th><th>Soleil par les fenêtres, oct.–févr. (avant → après)</th><th>Façades touchées le 20 mars</th></tr>
+    <tr><td>12 Sapin Bleu</td><td>5,3 → 1,2 h/jour</td><td>sud 6 h 50, est 3 h 40, ouest 50 min</td></tr>
+    <tr><td>10 Sapin Bleu</td><td>5,1 → 2,0 h/jour</td><td>sud 5 h 20, est 2 h 10, ouest 2 h 05</td></tr>
+    <tr><td>103 Delaune</td><td>4,8 → 2,4 h/jour</td><td>sud 3 h 45, est 3 h 30</td></tr>
+    <tr><td>101 Delaune</td><td>3,8 → 2,7 h/jour</td><td>est 2 h 35</td></tr>
+    <tr><td>8 Sapin Bleu</td><td>4,3 → 2,9 h/jour</td><td>est 20 min, soleil bas</td></tr>
+  </table>
+
+  <h2>Distances</h2>
+  <p>Distance de chaque façade au rez-de-chaussée du projet, qui est toujours la partie la plus proche :</p>
+  <table>
+    <tr><th>Maison</th><th>Sud</th><th>Est</th><th>Ouest</th><th>Nord</th></tr>
+    <tr><td>12 Sapin Bleu</td><td>8,4 m</td><td>8,4 m</td><td>10,3 m</td><td>19,0 m (aveugle)</td></tr>
+    <tr><td>103 Delaune</td><td>12,3 m</td><td>12,3 m</td><td>13,5 m</td><td>22,4 m (mitoyenne)</td></tr>
+    <tr><td>10 Sapin Bleu</td><td>12,3 m</td><td>12,3 m</td><td>14,2 m</td><td>21,3 m (mitoyenne)</td></tr>
+    <tr><td>8 Sapin Bleu</td><td>21,3 m (mitoyenne)</td><td>21,3 m</td><td>24,1 m</td><td>30,6 m</td></tr>
+    <tr><td>101 Delaune</td><td>22,4 m (mitoyenne)</td><td>22,4 m</td><td>23,5 m</td><td>32,5 m</td></tr>
+  </table>
+  <p>Distance du projet à la limite de la parcelle des Castors : 5,8 à 7,8 m.</p>
+
+  <h2>PLU et OAP</h2>
+  <ul>
+    <li><b>Zone</b> : le terrain est en UP 29 « Secteur Lebon-Lamartine » du PLUi, approuvé le 16/12/2025 et applicable
+      au permis. Les Castors sont en zone pavillonnaire UHm.</li>
+    <li><b>Règle « H ≤ D + 10 »</b> : elle est réservée à la zone UP 26 (Campus Grand Parc). Si elle s'appliquait, le
+      R+5 situé à 6,6 m de la limite serait limité à 16,6 m, soit environ 3,2 m de moins.</li>
+    <li><b>Retrait de 6 m face aux zones pavillonnaires</b> : il fait partie des règles générales, qui ne s'appliquent
+      pas aux zones UP (article 1.3.5).</li>
+    <li><b>OAP</b> : il n'y a pas d'OAP Lebon-Lamartine. L'OAP « Habitat bioclimatique » demande d'« assurer un
+      épannelage de hauteurs et des distances de retraits entre deux tissus urbains » (2.1.3). Le contrôle porte sur la
+      compatibilité, pas sur la conformité.</li>
+  </ul>
+  <p>Les règles de la zone UP 29, comparées au projet tel que nous l'avons modélisé :</p>
+  <table>
+    <tr><th>Règle UP 29</th><th>Projet (modèle, ±1 à 2 m)</th><th>Résultat</th></tr>
+    <tr><td>Hauteur maximale de 36 m</td><td>19,8 m</td><td>conforme</td></tr>
+    <tr><td>Sur la limite, ou retrait d'au moins 2,50 m si la façade a des vues directes</td><td>5,8 à 7,8 m de la limite des Castors</td><td>conforme</td></tr>
+    <tr><td>Emprise au sol de 75 % au plus</td><td>environ 64 %</td><td>conforme</td></tr>
+    <tr><td>6 m au moins entre deux bâtiments du même terrain</td><td>environ 7 m entre A et B</td><td>conforme</td></tr>
+    <tr><td>Attique en retrait de 2 m par rapport à la façade sur rue</td><td>environ 1,9 m mesuré sur les photos</td><td>à vérifier sur les cotes</td></tr>
+    <tr><td>Socle du bât. B face à la parcelle AV0067 (voisin à l'est)</td><td>environ 0,6 m de la limite</td><td>à vérifier : moins de 2,50 m n'est admis que sans vues directes</td></tr>
+  </table>
+
+  <h2>Limites et sources</h2>
+  <p class="warn">Le projet a été reconstitué d'après des photos des plans du permis (précision d'environ ±1 à 2 m).
+    Les fenêtres des maisons sont supposées, sauf la petite fenêtre sud des 10 et 12. Les textes ont été lus par un
+    non-juriste.</p>
+  <ul>
+    <li><a href="https://data.geopf.fr/annexes/gpu/documents/DU_200058014/2e018aad7e25effb980f4d34d2d7829c/200058014_reglement_20251216.pdf" target="_blank">PLUi, règlement écrit</a> : article 1.3.5 ; zones UP 26 à 29</li>
+    <li><a href="https://data.geopf.fr/annexes/gpu/documents/DU_200058014/2e018aad7e25effb980f4d34d2d7829c/200058014_OAP_1_20251216.pdf" target="_blank">PLUi, OAP thématiques</a> : OAP « Habitat bioclimatique »</li>
+    <li><a href="https://www.geoportail-urbanisme.gouv.fr/api/document/ec10b6d07427c038e27db96be42df952/download" target="_blank">Ancien PLU de Villejuif, version du 13/05/2025</a></li>
+    <li>Trans-Faire, « Note complémentaire ensoleillement », mars 2025</li>
+    <li>Maquette 3D et résultats maison par maison : onglet « Maquette 3D » de cette page</li>
+  </ul>
+</div></div>
 
 <script>/**
  * @license
@@ -1884,6 +2000,16 @@ updateSun();
 if (Q.get('maison') !== null) selectHouse(+Q.get('maison'), true);
 if (Q.get('play')) playBtn.click();
 if (Q.get('replie')) document.querySelectorAll('.panel').forEach(p => setCollapsed(p, true));
+
+// onglets : maquette 3D / note pour l'avocat (#onglet=note ouvre directement la note)
+function showTab(note) {
+  document.body.classList.toggle('note-on', note);
+  document.getElementById('tab3d').classList.toggle('on', !note);
+  document.getElementById('tabNote').classList.toggle('on', note);
+}
+document.getElementById('tab3d').onclick = () => showTab(false);
+document.getElementById('tabNote').onclick = () => showTab(true);
+showTab(Q.get('onglet') === 'note');
 requestAnimationFrame(loop);
 </script>
 </body>
