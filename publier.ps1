@@ -18,13 +18,17 @@ if (-not $html.Contains('name="robots"')) {
 }
 [IO.File]::WriteAllText($cible, $html, $utf8)
 
+# Planche du 20 mars (PDF A3, lien de l'onglet « Planche du 20 mars »)
+$planche = Join-Path $site '..\lamartine\etude_ombres\planche_20mars.pdf'
+if (Test-Path $planche) { Copy-Item $planche (Join-Path $site 'planche_20mars.pdf') -Force }
+
 # Synchronise le dossier des documents sources (PDF, photos)
 $docs = Join-Path $site '..\lamartine\LamartineSource'
 robocopy (Resolve-Path $docs) (Join-Path $site 'LamartineSource') /MIR /NJH /NJS /NP | Out-Null
 if ($LASTEXITCODE -ge 8) { throw "Echec de la copie de LamartineSource (robocopy $LASTEXITCODE)" }
 
 Set-Location $site
-git add index.html LamartineSource
+git add index.html LamartineSource planche_20mars.pdf
 git diff --cached --quiet
 if ($LASTEXITCODE -eq 0) { Write-Host 'Aucun changement a publier.'; exit 0 }
 git commit -m ("Mise a jour de la maquette " + (Get-Date -Format 'yyyy-MM-dd HH:mm'))
