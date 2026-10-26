@@ -63,13 +63,28 @@
                 box-shadow: 0 2px 12px rgba(0,0,0,0.15); font-size: 15px; line-height: 1.5; }
   #docs h1 { font-size: 21px; margin: 0 0 6px; }
   #docs h2 { font-size: 16px; text-transform: none; letter-spacing: 0; color: #1d3557; margin: 22px 0 6px; }
-  #docs a.doc { display: flex; gap: 12px; align-items: center; padding: 10px 12px; margin: 6px 0; border: 1px solid #dfe3e8;
-                border-radius: 9px; text-decoration: none; color: #1b1b1b; background: #fbfcfd; }
-  #docs a.doc:hover { background: #eef4fb; border-color: #b9cde6; }
-  #docs a.doc .ic { font-size: 22px; flex: none; }
-  #docs a.doc .tt { flex: 1; } #docs a.doc .tt b { display: block; font-size: 15.5px; }
-  #docs a.doc .tt span { color: #555; font-size: 13.5px; }
-  #docs a.doc .sz { flex: none; color: #666; font-size: 13px; white-space: nowrap; }
+  #docs .doc { margin: 6px 0; border: 1px solid #dfe3e8; border-radius: 9px; background: #fbfcfd; overflow: hidden; }
+  #docs .doc.star { border-color: #e7c66b; background: #fffcf2; }
+  #docs .doc .dh { display: flex; gap: 12px; align-items: center; width: 100%; padding: 10px 12px; margin: 0; border: none;
+                   border-radius: 0; background: transparent; text-align: left; color: #1b1b1b; font-size: 15px; }
+  #docs .doc .dh:hover, #docs .doc.open .dh { background: #eef4fb; }
+  #docs .doc.star .dh:hover, #docs .doc.star.open .dh { background: #fbf1d3; }
+  #docs .doc .ic { font-size: 22px; flex: none; }
+  #docs .doc .tt { flex: 1; } #docs .doc .tt b { display: block; font-size: 15.5px; }
+  #docs .doc .tt span { color: #555; font-size: 13.5px; }
+  #docs .doc .sz { flex: none; color: #666; font-size: 13px; white-space: nowrap; }
+  #docs .doc .chev { flex: none; color: #2f6db5; font-size: 13px; transition: transform .15s; }
+  #docs .doc.open .chev { transform: rotate(90deg); }
+  #docs .doc .dd { display: none; padding: 4px 16px 14px 46px; border-top: 1px solid #e6eaef; background: #fff; }
+  #docs .doc.open .dd { display: block; }
+  #docs .doc .dd p { margin: 8px 0; line-height: 1.5; }
+  #docs .doc .dd .why { color: #8a6100; font-size: 14px; }
+  #docs .doc .dd ul { margin: 6px 0 10px; padding-left: 20px; } #docs .doc .dd li { margin: 4px 0; line-height: 1.45; }
+  #docs .doc .dd .pk { font-weight: 700; color: #1d3557; margin: 10px 0 2px; }
+  #docs .doc a.open { display: inline-block; margin-top: 4px; padding: 7px 16px; border-radius: 7px; background: #2f6db5;
+                      color: #fff; font-weight: 600; text-decoration: none; }
+  #docs .doc a.open:hover { background: #255a96; }
+  #docs .doc a.open small { font-weight: 400; opacity: .85; }
   #docs .photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
   #docs .photos a { display: block; border: 1px solid #dfe3e8; border-radius: 6px; overflow: hidden; }
   #docs .photos img { width: 100%; height: 110px; object-fit: cover; display: block; }
@@ -164,8 +179,10 @@
     #note th, #note td { min-width: 90px; }
     #note .warn { font-size: 15px; }
     #note ol, #note ul { padding-left: 22px; }
-    #docs a.doc { padding: 12px; }
-    #docs a.doc .tt b { font-size: 16px; } #docs a.doc .tt span { font-size: 14.5px; }
+    #docs .doc .dh { padding: 12px; gap: 10px; }
+    #docs .doc .tt b { font-size: 16px; } #docs .doc .tt span { font-size: 14.5px; }
+    #docs .doc .dd { padding: 4px 14px 16px; }
+    #docs .doc a.open { display: block; text-align: center; padding: 12px; font-size: 16px; }
     #docs .photos { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
     #planche .pscroll { overflow-x: auto; margin: 12px -16px; padding: 0 16px; }
     #planche img { width: 1400px; max-width: none; }
@@ -316,8 +333,10 @@
 <!-- ============ NOTE POUR L'AVOCAT ============ -->
 <div id="docs"><div class="page">
   <h1>📁 Les documents</h1>
-  <p>Toutes les pièces dont nous disposons. <b>Touchez un document pour l'ouvrir</b> : il s'affiche directement dans le
-    navigateur. Les documents les plus lourds peuvent mettre quelques secondes à s'ouvrir sur un téléphone.</p>
+  <p>Toutes les pièces dont nous disposons. <b>Touchez un document pour voir son résumé</b> et les passages qui nous
+    concernent, puis « Ouvrir le document » pour l'afficher dans le navigateur. Les documents les plus lourds peuvent
+    mettre quelques secondes à s'ouvrir sur un téléphone.</p>
+  <p>⭐ : <b>les documents à lire en priorité</b>.</p>
   <div id="docsList"></div>
 </div></div>
 
@@ -337,97 +356,65 @@
 <div id="note"><div class="page">
   <h1>Note pour l'avocat — Projet Lebon-Lamartine et copropriété des Castors de Sainte Colombe</h1>
   <p class="muted">Mise à jour le 26 octobre 2026</p>
-  <p>Le projet A26 BLM de la rue Lamartine (permis n° PC 094 076 26 01015, déposé le 9 mars 2026 par la SCCV Villejuif
-    Lebon Lamartine FNE-FNO, groupe Emerige) compte 41 logements dans deux bâtiments : A en R+4+A (6 niveaux, 19,33 m)
-    et B en R+2. Il s'élève au sud des 18 maisons de plain-pied de la copropriété des Castors de Sainte Colombe. Aucune
-    règle chiffrée du PLU ne paraît enfreinte : les arguments possibles tiennent aux engagements pris lors de l'enquête
-    publique, au règlement du lotissement, à l'étude d'impact, au dossier de permis et à l'OAP. <b>Le permis a peut-être
-    déjà été accordé : c'est à vérifier en priorité.</b></p>
-  <p>Depuis la version précédente de cette note, nous avons reçu de la mairie le dossier du <b>permis d'aménager</b> du
-    quartier (n° PA 094 076 24 W6001), et nous avons lu l'avis de l'Autorité environnementale et le rapport de
-    l'enquête publique. Le terrain du projet est le lot « Frange Nord-Ouest » (FNO) de ce lotissement.</p>
+  <p>Le projet A26 BLM de la rue Lamartine (permis de construire n° PC 094 076 26 01015, déposé le 9 mars 2026 par la
+    SCCV Villejuif Lebon Lamartine FNE-FNO, groupe Emerige) compte 41 logements dans deux bâtiments : A en R+4+A
+    (6 niveaux, 19,33 m) et B en R+2. Il s'élève au sud des 18 maisons de plain-pied de la copropriété des Castors de
+    Sainte Colombe.</p>
+  <p>Le terrain est le lot « Frange Nord-Ouest » (FNO) du lotissement Lebon-Lamartine, créé par le permis d'aménager
+    n° PA 094 076 24 W6001. Ce permis d'aménager a été accordé le 18 juillet 2025 et transféré à Grand Paris Aménagement
+    le 5 septembre 2025. <b>Le permis de construire, lui, a peut-être déjà été accordé : c'est à vérifier en
+    priorité.</b> Aucun des documents que nous avons ne contient de décision sur ce permis.</p>
 
-  <h2>Ce que montrent le permis d'aménager et l'enquête publique</h2>
+  <h2>L'essentiel</h2>
   <ul>
-    <li><b>Engagements de la ville pendant l'enquête publique</b> (29 janvier – 3 mars 2025). Les Castors ont envoyé
-      32 courriers (soleil, panneaux solaires, vues, clôture). Dans sa réponse, reprise par le commissaire-enquêteur
-      (rapport, p. 25), la ville écrit : « le futur bâti sera en <b>R+2 maximum sur 75 % de sa longueur</b>. Une
-      émergence est prévue en R+4 + attique » ; elle annonce aussi une bande plantée de 4 à 5 m, des balcons et loggias
-      au sud ou à l'ouest, et que « le promoteur se devra de reconstruire la limite séparative ». Le commissaire-enquêteur
-      a donné un avis favorable <b>avec une réserve</b> : que ces engagements soient effectivement réalisés, notamment
-      pour l'espace entre l'immeuble FNO et les pavillons, l'intimité des pavillons et la limite séparative.</li>
-    <li><b>Ce que prévoit le permis de construire</b> : le bât. A est en R+4+A sur environ 36 m, sur une longueur bâtie
-      totale d'environ 107 m, soit environ un tiers ; le R+2 (bât. B) n'occupe qu'environ 58 % de la longueur. Le permis
-      conserve le mur existant (« clôture existante à conserver ») au lieu de reconstruire la limite.</li>
-    <li><b>Ce qu'avait évalué le permis d'aménager</b> : sur le plan d'aménagement (PA9, 1/500), l'émergence R+4+A ne
-      mesure qu'environ 25 m de long et se trouve à <b>10 m de la limite des Castors</b>, côté rue ; le reste est en
-      R+2 ou en simple rez-de-chaussée. Dans le permis de construire, le bât. A est à 5,6 à 5,95 m de cette limite, sur toute sa hauteur. La note
-      d'ensoleillement Trans-Faire décrit le même volume que PA9 (« R+2 en limite nord le long du tissu pavillonnaire,
-      R+4 + attique à l'angle sud-ouest »). C'est sur cette base que l'étude d'impact conclut à une « incidence neutre »
-      sur les pavillons, « peu concernés par les ombrages des nouvelles constructions en frange nord qui restent basses
-      et épannelées » (p. 215). L'Autorité environnementale a même compris que ces constructions « ne dépasseront pas
-      R+2 » (avis du 20 novembre 2024).</li>
-    <li><b>Règlement du lotissement</b> (pièce PA10-1, « cahier de préconisations » et fiches de lot, février 2024). Ordre
-      de primauté qu'il fixe : PLUi, puis permis d'aménager, puis cahier de préconisations, puis fiches de lot. Un code
-      couleur distingue les « prescriptions : indispensables et non dérogeables » (en vert) des simples préconisations
-      et des objectifs (p. 8).
-      <ul>
-        <li>La fiche du lot FNO (p. 88 à 93) ne contient <b>pas</b> la phrase sur l'équinoxe (« l'ombre portée ne devra
-          pas affecter les façades avec des ouvertures »). Elle n'est que dans la fiche du lot voisin, la Frange Nord-Est,
-          et y est écrite en noir, c'est-à-dire comme un objectif et non comme une prescription. Le passage
-          « ensoleillement » de la fiche FNO est d'ailleurs copié de celui de la Frange Nord-Est (il commence par « La
-          frange nord-est… »), et la modélisation annoncée de l'ensoleillement des pavillons au nord n'y figure pas
-          (légende sans image, p. 93).</li>
-        <li>Prescriptions en vert (p. 45) : franges nord limitées à R+3, « avec une exception pour un lot en
-          R+4+Attique » (le lot FNO, d'après la notice pompiers du permis d'aménager) : la hauteur du permis est donc
-          admise ; et « à partir du R+4, les étages supérieurs seront organisés en retraits successifs ». Or l'attique du
-          bât. A est en retrait côté rue mais à l'aplomb côté Castors.</li>
-        <li>Programme de la fiche FNO (p. 88) : surface de plancher totale de <b>2 663 m²</b>, 40 logements, 98 places, et
-          un local d'économie sociale et solidaire au rez-de-chaussée (p. 91). Le permis de construire déclare
-          <b>2 974 m²</b> (2 702 m² de logements et 272 m² de commerce), soit 311 m² ou 12 % de plus, 41 logements et
-          99 places. Le formulaire du permis d'aménager indique que la constructibilité est répartie entre les lots
-          « conformément aux plans ou tableaux joints » (31 000 m² au total pour 12 lots).</li>
-      </ul></li>
-    <li><b>L'arrêté du permis d'aménager</b> (18 juillet 2025) accorde l'autorisation et impose seulement de respecter les
-      prescriptions des avis des services : il ne reprend ni les mesures de l'étude d'impact, ni la réserve du
-      commissaire-enquêteur. Le permis a été transféré à Grand Paris Aménagement le 5 septembre 2025.</li>
+    <li>Aucune règle chiffrée du PLUi ne paraît enfreinte.</li>
+    <li>Pendant l'enquête publique de 2025, la ville s'est engagée par écrit : « le futur bâti sera en <b>R+2 maximum sur
+      75 % de sa longueur</b> ». Le commissaire-enquêteur a fait du respect de ces engagements une réserve à son avis
+      favorable. Le permis de construire met du R+4+A sur environ un tiers de la longueur.</li>
+    <li>Le permis d'aménager plaçait l'émergence R+4+A à <b>10 m de la limite des Castors</b>, sur environ 25 m. Le permis
+      de construire la place à 5,6 à 5,95 m, sur environ 36 m. L'étude d'impact et la note d'ensoleillement ont évalué
+      le premier volume et conclu à un impact faible.</li>
+    <li>La surface de plancher du permis (2 974 m²) dépasse de 12 % celle prévue par la fiche du lot (2 663 m²).</li>
+    <li>Notre maquette, refaite sur les plans du permis, trouve que le 20 mars l'ombre du projet atteint des façades avec
+      fenêtres de 5 maisons, et qu'en hiver le soleil par les fenêtres du 12 Sapin Bleu passe de 5,3 à 1 h par jour.</li>
+    <li>Le critère « à l'équinoxe, l'ombre portée ne devra pas affecter les façades avec des ouvertures » ne figure pas
+      dans la fiche de notre lot : il ne peut sans doute pas servir directement.</li>
   </ul>
 
   <h2>Questions pour vous</h2>
   <ol>
     <li><b>Engagements de l'enquête publique</b> : la réponse de la ville (« R+2 maximum sur 75 % de sa longueur »,
-      reconstruction de la limite séparative) et la réserve du commissaire-enquêteur ont-elles une portée juridique
-      pour le permis de construire ? Le bât. A en R+4+A sur environ un tiers de la longueur peut-il être contesté sur
-      ce fondement, ou au moins servir dans un recours gracieux ?</li>
+      reconstruction de la limite séparative par le promoteur) et la réserve du commissaire-enquêteur ont-elles une
+      portée juridique pour le permis de construire ? Le bât. A en R+4+A sur environ un tiers de la longueur peut-il être
+      contesté sur ce fondement, ou au moins servir dans un recours gracieux ?</li>
     <li><b>Règlement du lotissement</b> : est-il opposable au permis de construire ? Si oui :
       <ul>
         <li>la surface de plancher de 2 974 m² dépasse-t-elle les droits à construire du lot (2 663 m² dans la fiche) ?</li>
         <li>l'attique à l'aplomb de la façade côté Castors respecte-t-il la prescription des « retraits successifs » à
           partir du R+4 ?</li>
         <li>le critère de l'équinoxe, qui n'est écrit que pour le lot voisin et sans valeur de prescription, peut-il
-          encore servir ?</li>
+          servir malgré tout ?</li>
       </ul></li>
-    <li><b>Étude d'impact</b> : elle a évalué une émergence de 25 m à 10 m des Castors et conclu à une « incidence neutre ».
-      Le permis de construire, plus haut près des maisons, devait-il s'accompagner d'une mise à jour de l'étude d'impact ?
-      L'absence des mesures de l'étude d'impact dans l'arrêté du permis d'aménager a-t-elle une conséquence, alors que le
-      délai de recours contre cet arrêté est sans doute expiré ?</li>
-    <li><b>Note d'ensoleillement</b> : la note Trans-Faire de mars 2025 est l'« étude complémentaire » jointe à la réponse
-      de la ville à l'enquête publique. Elle étudie le volume du permis d'aménager, pas celui du permis de construire, et
-      conclut à « très peu d'incidence » sans vérifier les façades fenêtre par fenêtre. Peut-elle encore servir à
-      justifier le projet ?</li>
+    <li><b>Étude d'impact</b> : elle a évalué une émergence de 25 m à 10 m des Castors et conclu à une « incidence
+      neutre ». Le permis de construire, plus haut près des maisons, devait-il s'accompagner d'une mise à jour de l'étude
+      d'impact ? L'absence des mesures de l'étude d'impact dans l'arrêté du permis d'aménager a-t-elle une conséquence,
+      alors que le délai de recours contre cet arrêté est sans doute expiré ?</li>
+    <li><b>Note d'ensoleillement</b> : la note Trans-Faire de mars 2025 étudie le volume du permis d'aménager, pas celui du
+      permis de construire, et conclut à « très peu d'incidence » sans vérifier les façades fenêtre par fenêtre.
+      Peut-elle encore servir à justifier le projet ?</li>
     <li><b>Dossier de permis</b> : les deux insertions PC6 sont prises depuis la rue, aucune ne montre le projet depuis
       les maisons des Castors. Les coupes précisent que les cotes NGF sont « données à titre indicatif et restent
       soumises à ultérieure synthèse ». La notice descriptive PC4 manque dans les pièces que nous avons. Ces points
       peuvent-ils fonder un grief d'insuffisance du dossier ?</li>
     <li><b>OAP</b> : le passage sans gradins de maisons de plain-pied à un bâtiment de 6 niveaux rend-il le projet
-      incompatible avec l'orientation 2.1.3 ?</li>
+      incompatible avec l'orientation 2.1.3 de l'OAP « Habitat bioclimatique » ?</li>
     <li><b>Procédure</b> :
       <ul>
-        <li>Le permis est-il délivré ? Le dossier a été complété fin mai–début juin 2026, et l'instruction était encore
-          en cours le 17 août 2026 (2e avis assainissement de l'EPT). Sans réponse de la mairie dans le délai
-          d'instruction, le permis peut être tacite.</li>
+        <li>Le permis de construire est-il délivré ? Le dossier a été complété fin mai–début juin 2026, et l'instruction
+          était encore en cours le 17 août 2026 (2e avis assainissement de l'EPT). Sans réponse de la mairie dans le
+          délai d'instruction, le permis peut être tacite.</li>
         <li>Le délai de recours de 2 mois court à partir du premier jour d'affichage du permis sur le terrain.
-          L'affichage en mairie du 10 mars au 10 mai ne concernait que le dépôt. Jusqu'à quand peut-on agir ?</li>
+          L'affichage en mairie du 10 mars au 10 mai 2026 ne concernait que le dépôt. Jusqu'à quand peut-on agir ?</li>
         <li>Faut-il d'abord envoyer un recours gracieux au maire, qui prolonge ce délai, ou aller directement au
           tribunal administratif ?</li>
         <li>Tout recours doit être notifié au bénéficiaire du permis et à la mairie dans les 15 jours : qui s'en
@@ -440,19 +427,19 @@
       12 Sapin Bleu et une infiltration des eaux de pluie dans la bande plantée le long de la limite. En sol argileux,
       on conseille d'habitude de planter à une distance au moins égale à la hauteur adulte de l'arbre. Peut-on obtenir
       des garanties (essences, barrières anti-racines, étude géotechnique) et un référé préventif avant travaux ?</li>
-    <li><b>Commerce</b> : le rez-de-chaussée du bât. A accueille un commerce de 264 m², livré brut, pour 200 personnes
-      au plus. Il est classé magasin et restaurant ou bar, et l'avis hygiène impose de prévoir un extracteur de fumées de
-      cuisine. Une vue d'insertion montre une terrasse à l'angle. Sa façade nord est à 11,5 m du 103 Delaune. Le cerfa ne
-      déclare pourtant qu'un « commerce de détail », alors qu'un restaurant relève de la sous-destination
-      « restauration » : cet écart a-t-il une portée ? La fiche du lot prévoyait un local d'économie sociale et
-      solidaire, et l'Autorité environnementale « 200 m² » de commerces au rez-de-chaussée de la frange nord. Peut-on obtenir que la sortie du conduit, les horaires, la
-      terrasse et les livraisons soient encadrés, ou faire des observations lors de l'autorisation d'aménagement du
-      commerce (dossier AT 094 076 26 0 0009) ?</li>
+    <li><b>Commerce</b> : le rez-de-chaussée du bât. A accueille un commerce de 264 m² (272 m² au cerfa), livré brut,
+      pour 200 personnes au plus. Il est classé magasin et restaurant ou bar, et l'avis hygiène impose de prévoir un
+      extracteur de fumées de cuisine. Une vue d'insertion montre une terrasse à l'angle. Sa façade nord est à 11,5 m du
+      103 Delaune. Le cerfa ne déclare pourtant qu'un « commerce de détail », alors qu'un restaurant relève de la
+      sous-destination « restauration » : cet écart a-t-il une portée ? La fiche du lot prévoyait un local d'économie
+      sociale et solidaire, et l'Autorité environnementale « 200 m² » de commerces au rez-de-chaussée de la frange nord.
+      Peut-on obtenir que la sortie du conduit, les horaires, la terrasse et les livraisons soient encadrés, ou faire
+      des observations lors de l'autorisation d'aménagement du commerce (dossier AT 094 076 26 0 0009) ?</li>
     <li><b>Hors permis</b> : une action pour trouble anormal de voisinage est-elle envisageable après la construction ?</li>
   </ol>
   <p>Pièces à obtenir :</p>
   <ul class="todo">
-    <li>Arrêté de permis (ou attestation de permis tacite) et date du premier affichage sur le terrain</li>
+    <li>Arrêté du permis de construire (ou attestation de permis tacite) et date du premier affichage sur le terrain</li>
     <li>Les « plans plus précis » des franges nord que la ville a joints à sa réponse au commissaire-enquêteur
       (mars 2025)</li>
     <li>Notice descriptive PC4, notice paysagère (essences et hauteurs des arbres prévus le long de la limite) et étude
@@ -460,17 +447,59 @@
     <li>Relevé des fenêtres réelles des maisons les plus proches</li>
   </ul>
 
+  <h2>Le permis d'aménager et l'enquête publique</h2>
+  <p><b>Enquête publique</b> (n° E24000100/77, 29 janvier – 3 mars 2025, sur l'étude d'impact du permis d'aménager et
+    la mise en compatibilité du PLU). Les Castors ont envoyé 32 courriers (soleil, panneaux solaires, vues, clôture).
+    Dans sa réponse, reprise par le commissaire-enquêteur (rapport, p. 25), la ville écrit : « le futur bâti sera en
+    R+2 maximum sur 75 % de sa longueur. Une émergence est prévue en R+4 + attique ». Elle annonce aussi une bande plantée
+    de 4 à 5 m, des balcons et loggias au sud ou à l'ouest, et que « le promoteur se devra de reconstruire la limite
+    séparative ». Le commissaire-enquêteur a donné un avis favorable <b>avec une réserve</b> : que ces engagements soient
+    effectivement réalisés, notamment pour l'espace entre l'immeuble FNO et les pavillons, l'intimité des pavillons et
+    la limite séparative.</p>
+  <p>Ce qui était prévu pour le lot, comparé au permis de construire :</p>
+  <table>
+    <tr><th></th><th>Permis d'aménager et enquête publique</th><th>Permis de construire</th></tr>
+    <tr><td>Émergence R+4+A</td><td>environ 25 m de long, à 10 m de la limite des Castors, côté rue (plan PA9)</td>
+      <td>bât. A, environ 36 m de long, à 5,6 à 5,95 m de la limite, attique à l'aplomb côté Castors</td></tr>
+    <tr><td>Part de la longueur en R+2 au plus</td><td>75 % au moins (engagement de la ville)</td>
+      <td>environ 58 % (bât. B)</td></tr>
+    <tr><td>Surface de plancher</td><td>2 663 m² (fiche du lot)</td>
+      <td>2 974 m² : 2 702 m² de logements et 272 m² de commerce</td></tr>
+    <tr><td>Logements et places</td><td>40 logements, 98 places</td><td>41 logements, 99 places</td></tr>
+    <tr><td>Rez-de-chaussée</td><td>un local d'économie sociale et solidaire</td><td>un commerce, restaurant possible</td></tr>
+    <tr><td>Limite des Castors</td><td>reconstruite par le promoteur (engagement de la ville)</td>
+      <td>mur existant conservé (« clôture existante à conserver »)</td></tr>
+  </table>
+  <p><b>Étude d'impact</b> (Trans-Faire, juin 2024). Elle conclut à une « incidence neutre » sur les pavillons,
+    « peu concernés par les ombrages des nouvelles constructions en frange nord qui restent basses et épannelées »
+    (p. 215). L'Autorité environnementale parle elle aussi des constructions de la frange nord « qui ne dépasseront pas
+    R+2 » (avis du 20 novembre 2024). La note d'ensoleillement Trans-Faire de mars 2025, jointe par la ville à sa réponse
+    au commissaire-enquêteur, décrit le volume du plan PA9 : « R+2 en limite nord le long du tissu pavillonnaire,
+    R+4 + attique à l'angle sud-ouest ».</p>
+  <p><b>Règlement du lotissement</b> (pièce PA10-1, « cahier de préconisations » et fiches de lot, février 2024). Il fixe
+    l'ordre de primauté : PLUi, puis permis d'aménager, puis cahier de préconisations, puis fiches de lot. Un code couleur
+    distingue les « prescriptions : indispensables et non dérogeables » (en vert) des simples préconisations et des
+    objectifs (p. 8).</p>
+  <ul>
+    <li>La fiche du lot FNO (p. 88 à 93) ne contient pas la phrase sur l'équinoxe. Elle n'est que dans la fiche du lot
+      voisin, la Frange Nord-Est, et y est écrite en noir, c'est-à-dire comme un objectif et non comme une prescription.
+      Le passage « ensoleillement » de la fiche FNO est d'ailleurs copié de celui de la Frange Nord-Est (il commence par
+      « La frange nord-est… »), et la modélisation annoncée de l'ensoleillement des pavillons au nord n'y figure pas
+      (légende sans image, p. 93).</li>
+    <li>Prescriptions en vert (p. 45) : franges nord limitées à R+3, « avec une exception pour un lot en R+4+Attique »
+      (le lot FNO, d'après la notice pompiers du permis d'aménager) : la hauteur du permis est donc admise. Autre
+      prescription : « à partir du R+4, les étages supérieurs seront organisés en retraits successifs ». Or l'attique du
+      bât. A est en retrait côté rue mais à l'aplomb côté Castors.</li>
+    <li>Le formulaire du permis d'aménager indique que la constructibilité (31 000 m² pour 12 lots) est répartie entre les
+      lots « conformément aux plans ou tableaux joints ».</li>
+  </ul>
+  <p><b>Arrêté du permis d'aménager</b> (18 juillet 2025). Il accorde l'autorisation et impose seulement de respecter les
+    prescriptions des avis des services. Il ne reprend ni les mesures de l'étude d'impact, ni la réserve du
+    commissaire-enquêteur.</p>
+
   <h2>Ensoleillement</h2>
-  <p>La note Trans-Faire (mars 2025) étudie le lot « en phase pré-AVP » : « R+2 en limite nord le long du tissu
-    pavillonnaire, R+4 + attique à l'angle sud-ouest ». La ville l'a jointe à sa réponse à l'enquête publique. Les
-    hauteurs sont celles du permis (« R+4+A et R+2 ») : il n'y a pas d'étage en plus. Mais leur emplacement diffère :
-    dans le plan du permis d'aménager, l'émergence R+4+A est à 10 m de la limite des Castors ; dans le permis, le
-    bât. A est en R+4+A sur toute sa profondeur, jusqu'à 5,6 à 5,95 m de la limite, et son attique est à l'aplomb côté
-    Castors. Les images de la note ne permettent pas de vérifier exactement le volume modélisé. Elle conclut à « très
-    peu d'incidence » à l'équinoxe et à 1 à 2 h de soleil en moins en moyenne au solstice d'hiver. Le plan du rez-de-chaussée prévoit en outre une bande plantée d'arbres le long de la
-    limite des Castors, à environ 2,50 m : ni la note ni notre étude ne comptent leur ombre.</p>
-  <p>Notre étude, refaite sur les plans du permis calés sur le cadastre, trouve que le 20 mars l'ombre du projet atteint
-    des façades avec fenêtres de 5 maisons :</p>
+  <p>Notre étude, refaite sur les plans du permis de construire calés sur le cadastre, trouve que le 20 mars l'ombre du
+    projet atteint des façades avec fenêtres de 5 maisons :</p>
   <table>
     <tr><th>Maison</th><th>Soleil par les fenêtres, oct.–févr. (avant → après)</th><th>Façades touchées le 20 mars</th></tr>
     <tr><td>12 Sapin Bleu</td><td>5,3 → 1,0 h/jour</td><td>sud 7 h 05, est 3 h 40, ouest 30 min</td></tr>
@@ -481,8 +510,14 @@
   </table>
   <p>Panneaux solaires du 103 Delaune (environ 35 m² : 12 modules côté ouest et 8 côté est, comme dans la note
     Trans-Faire) : l'énergie solaire directe reçue baisse de 55 % d'octobre à février et de 10 % sur l'année. Côté ouest :
-    −41 % en hiver (soleil direct 3 h 45 → 1 h 45 par jour) ; côté est : −90 % en hiver (3 h 30 → 50 min par jour).
-    La note Trans-Faire annonce moins de 10 % sur l'année, lumière diffuse comprise, sans chiffre pour l'hiver.</p>
+    −41 % en hiver (soleil direct 3 h 45 → 1 h 45 par jour) ; côté est : −90 % en hiver (3 h 30 → 50 min par jour).</p>
+  <p>La note Trans-Faire de mars 2025 étudie le lot « en phase pré-AVP ». Ses hauteurs sont celles du permis (« R+4+A et
+    R+2 »), mais pas leur emplacement : l'émergence y est à l'angle sud-ouest, côté rue. Les images de la note ne
+    permettent pas de vérifier exactement le volume modélisé. Elle conclut à « très peu d'incidence » à l'équinoxe, à 1 à
+    2 h de soleil en moins en moyenne au solstice d'hiver, et à moins de 10 % de perte sur l'année pour les panneaux
+    solaires, lumière diffuse comprise, sans chiffre pour l'hiver.</p>
+  <p>Le plan du rez-de-chaussée prévoit en outre une bande plantée d'arbres le long de la limite des Castors, à environ
+    2,50 m : ni la note ni notre étude ne comptent leur ombre.</p>
 
   <h2>Distances</h2>
   <p>Distance de chaque façade au projet, d'après notre maquette recalée sur les plans du permis. La partie la plus
@@ -526,18 +561,16 @@
   </table>
 
   <h2>Limites et sources</h2>
-  <p class="warn">Les chiffres officiels viennent des pièces du permis. Les heures de soleil et les distances aux maisons
-    viennent de notre maquette, recalée sur les plans du permis (plan du rez-de-chaussée et plan des toitures calés sur
-    le cadastre, précision d'environ 0,5 m). L'émergence du plan d'aménagement PA9 (25 m de long, 10 m de la limite) est
-    mesurée sur ce plan vectoriel à 1/500, dont l'échelle a été contrôlée sur la surface du lot (2 220 m² mesurés, 2 226 m²
-    au cadastre). Les fenêtres des maisons sont supposées, sauf la petite fenêtre sud des 10 et 12. Les textes
-    ont été lus par un non-juriste.</p>
+  <p class="warn">Les chiffres officiels viennent des pièces des permis. Les heures de soleil et les distances aux maisons
+    viennent de notre maquette, recalée sur les plans du permis de construire (plan du rez-de-chaussée et plan des
+    toitures calés sur le cadastre, précision d'environ 0,5 m). Les longueurs du bât. A et de l'émergence du plan PA9
+    sont mesurées, la première sur cette maquette, la seconde sur le plan vectoriel PA9 à 1/500, dont l'échelle a été
+    contrôlée sur la surface du lot (2 220 m² mesurés, 2 226 m² au cadastre). Les fenêtres des maisons sont supposées,
+    sauf la petite fenêtre sud des 10 et 12. Les textes ont été lus par un non-juriste.</p>
   <ul>
-    <li>Dossier de permis PC 094 076 26 01015 : cerfa, plans PC1 à PC8, notices, avis des services (dont le 2e avis
-      assainissement de l'EPT du 17 août 2026 et son extrait du règlement « argiles », zone B3), récépissé de dépôt</li>
-    <li><a href="https://data.geopf.fr/annexes/gpu/documents/DU_200058014/2e018aad7e25effb980f4d34d2d7829c/200058014_reglement_20251216.pdf" target="_blank">PLUi, règlement écrit</a> : article 1.3.5 ; zones UP 26 à 29</li>
-    <li><a href="https://data.geopf.fr/annexes/gpu/documents/DU_200058014/2e018aad7e25effb980f4d34d2d7829c/200058014_OAP_1_20251216.pdf" target="_blank">PLUi, OAP thématiques</a> : OAP « Habitat bioclimatique »</li>
-    <li><a href="https://www.geoportail-urbanisme.gouv.fr/api/document/ec10b6d07427c038e27db96be42df952/download" target="_blank">Ancien PLU de Villejuif, version du 13/05/2025</a></li>
+    <li>Dossier du permis de construire PC 094 076 26 01015 : cerfa, plans PC1 à PC8, notices, avis des services (dont
+      le 2e avis assainissement de l'EPT du 17 août 2026 et son extrait du règlement « argiles », zone B3), récépissé de
+      dépôt</li>
     <li>Dossier du permis d'aménager PA 094 076 24 W6001 : arrêté du 18 juillet 2025 et arrêté de transfert du
       5 septembre 2025, cerfa, plan d'aménagement PA9, règlement du lotissement PA10-1 (cahier de préconisations et
       fiches de lot), étude d'impact PA14 (Trans-Faire, juin 2024), notice pompiers (onglet « Documents »)</li>
@@ -547,6 +580,9 @@
       et <a href="https://www.villejuif.fr/fileadmin/mediatheque/villejuif/vie-municipale/urbanisme/Grands_projets/GOSB-VILLEJUIF-CONCLUSIONS-MOTIVEES.pdf" target="_blank">conclusions motivées</a>
       du commissaire-enquêteur (mars 2025)</li>
     <li>Trans-Faire, « Note complémentaire ensoleillement », mars 2025</li>
+    <li><a href="https://data.geopf.fr/annexes/gpu/documents/DU_200058014/2e018aad7e25effb980f4d34d2d7829c/200058014_reglement_20251216.pdf" target="_blank">PLUi, règlement écrit</a> : article 1.3.5 ; zones UP 26 à 29</li>
+    <li><a href="https://data.geopf.fr/annexes/gpu/documents/DU_200058014/2e018aad7e25effb980f4d34d2d7829c/200058014_OAP_1_20251216.pdf" target="_blank">PLUi, OAP thématiques</a> : OAP « Habitat bioclimatique »</li>
+    <li><a href="https://www.geoportail-urbanisme.gouv.fr/api/document/ec10b6d07427c038e27db96be42df952/download" target="_blank">Ancien PLU de Villejuif, version du 13/05/2025</a></li>
     <li>Maquette 3D et résultats maison par maison : onglet « Maquette 3D » de cette page</li>
   </ul>
 </div></div>
@@ -2548,15 +2584,20 @@ document.getElementById('tabPlanche').onclick = () => showTab('planche');
 document.getElementById('tabDocs').onclick = () => showTab('docs');
 showTab(['note', 'planche', 'docs'].includes(Q.get('onglet')) ? Q.get('onglet') : '3d');
 
-// onglet « Documents » : liens directs vers les fichiers (à côté de la page en ligne ; ../ quand la page est ouverte
-// depuis le dossier etude_ombres)
+// onglet « Documents » : un clic sur un document déplie son résumé (docs_resumes.json) et le bouton « Ouvrir » ; liens
+// directs vers les fichiers (à côté de la page en ligne ; ../ quand la page est ouverte depuis le dossier etude_ombres)
 (function () {
   const base = location.protocol === 'file:' ? '../LamartineSource/' : 'LamartineSource/';
   const url = f => base + f.split('/').map(encodeURIComponent).join('/');
   const size = kb => kb >= 1024 ? (kb / 1024).toFixed(1).replace('.', ',') + ' Mo' : kb + ' Ko';
-  const item = (href, ic, t, d, kb) => `<a class="doc" href="${href}" target="_blank" rel="noopener">
-      <span class="ic">${ic}</span><span class="tt"><b>${t}</b>${d ? `<span>${d}</span>` : ''}</span>
-      <span class="sz">${kb ? size(kb) : ''}</span></a>`;
+  const item = (href, ic, x) => `<div class="doc${x.s ? ' star' : ''}">
+      <button class="dh"><span class="ic">${ic}</span>
+        <span class="tt"><b>${x.s ? '⭐ ' : ''}${x.t}</b>${x.d ? `<span>${x.d}</span>` : ''}</span>
+        <span class="sz">${x.kb ? size(x.kb) : ''}</span><span class="chev">▶</span></button>
+      <div class="dd">${x.w ? `<p class="why">⭐ ${x.w}</p>` : ''}${x.r ? `<p>${x.r}</p>` : ''}
+        ${x.p && x.p.length ? `<div class="pk">À retenir</div><ul>${x.p.map(p => `<li>${p}</li>`).join('')}</ul>` : ''}
+        <a class="open" href="${href}" target="_blank" rel="noopener">📂 Ouvrir le document
+          ${x.kb ? `<small>(${/\.pdf$/i.test(href) ? 'PDF, ' : ''}${size(x.kb)})</small>` : ''}</a></div></div>`;
   const G = { permis: '📐 Le dossier de permis de construire (n° PC 094 076 26 01015)', avis: '📨 Les avis des services',
               pa: '🗺️ Le permis d\'aménager du quartier Lebon-Lamartine (n° PA 094 076 24 W6001)',
               ep: '📢 L\'Autorité environnementale et l\'enquête publique (2024–2025)',
@@ -2565,17 +2606,30 @@ showTab(['note', 'planche', 'docs'].includes(Q.get('onglet')) ? Q.get('onglet') 
   for (const g of ['permis', 'avis', 'pa', 'ep', 'autres']) {
     const L = DATA.docs.filter(x => x.g === g);
     if (!L.length && g !== 'autres') continue;
-    h += `<h2>${G[g]}</h2>` + L.map(x => item(url(x.f), '📄', x.t, x.d, x.kb)).join('');
+    h += `<h2>${G[g]}</h2>` + L.map(x => item(url(x.f), '📄', x)).join('');
     if (g === 'autres')
-      h += item('planche_20mars.pdf', '📊', 'Planche du 20 mars (notre étude)',
-                'L\'ombre du projet sur les façades à fenêtres, le jour de l\'équinoxe.', 0);
+      h += item('planche_20mars.pdf', '📊', { t: 'Planche du 20 mars (notre étude)',
+        d: 'L\'ombre du projet sur les façades à fenêtres, le jour de l\'équinoxe.',
+        r: 'Notre propre étude, faite avec la maquette 3D de cette page à partir des plans du permis calés sur le cadastre. '
+         + 'Elle montre, heure par heure le 20 mars, l\'ombre du projet sur les façades avec fenêtres des maisons des '
+         + 'Castors. C\'est une <b>estimation</b> : les fenêtres des maisons sont supposées et les arbres prévus ne sont '
+         + 'pas comptés. La même planche est visible dans l\'onglet « Planche du 20 mars ».' });
   }
   const P = DATA.docs.filter(x => x.g === 'photos');
   if (P.length) h += `<h2>📷 Photos des plans (${P.length})</h2><p class="muted">Photos des plans prises avant que nous ayons
       les fichiers du permis. Touchez une photo pour l'agrandir.</p><div class="photos">` +
       P.map(x => `<a href="${url(x.f)}" target="_blank" rel="noopener"><img loading="lazy" src="${url(x.f)}" alt="${x.t}"></a>`).join('') +
       '</div>';
-  document.getElementById('docsList').innerHTML = h;
+  const list = document.getElementById('docsList');
+  list.innerHTML = h;
+  // un seul résumé ouvert à la fois
+  list.querySelectorAll('.doc .dh').forEach(b => b.onclick = () => {
+    const d = b.parentElement, was = d.classList.contains('open');
+    list.querySelectorAll('.doc.open').forEach(o => o.classList.remove('open'));
+    d.classList.toggle('open', !was);
+    const top = d.getBoundingClientRect().top;
+    if (!was && (top < 60 || top > innerHeight - 120)) d.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  });
 })();
 
 // options d'affichage : arbres prévus, clôture (#arbres=0 / #cloture=0 dans l'adresse pour les masquer)
